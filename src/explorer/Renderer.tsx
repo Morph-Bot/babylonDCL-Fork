@@ -221,5 +221,7 @@ async function main(canvas: HTMLCanvasElement): Promise<BABYLON.Scene> {
       networkedProfileSystem.setAvatar(await downloadAvatar(identity.address))
   })
 
+
+  const xrHelper = await scene.createDefaultXRExperienceAsync();
   return scene
 }

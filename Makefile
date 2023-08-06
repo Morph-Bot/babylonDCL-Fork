@@ -1,6 +1,7 @@
 ifneq ($(CI), true)
 LOCAL_ARG = --local --verbose --diagnostics
 endif
+SHELL=cmd
 
 install: node_modules testing-realm/node_modules
 
@@ -11,7 +12,7 @@ node_modules: package-lock.json package.json
 	npm install
 
 testing-realm/node_modules: testing-realm/package-lock.json testing-realm/package.json
-	cd testing-realm; npm install
+	cd testing-realm && npm install
 
 test:
 	@echo "~ Running tests..."
@@ -25,9 +26,9 @@ test-watch:
 	node_modules/.bin/jest --detectOpenHandles --colors --runInBand --watch $(TESTARGS)
 
 build-testing-realm: testing-realm/node_modules avatars-scene
-	cd testing-realm; npm run build
-	cd testing-realm; \
-		node_modules/.bin/sdk-commands export-static \
+	cd testing-realm && npm run build
+	cd testing-realm && \
+		C:/Development/babylonDCL-Fork/testing-realm/node_modules/.bin/sdk-commands export-static \
 			--destination ../static/ipfs \
 			--realmName testing-realm \
 			--timestamp 1683892881318 \
@@ -35,23 +36,23 @@ build-testing-realm: testing-realm/node_modules avatars-scene
 			--baseUrl=$(CF_PAGES_URL)/ipfs
 
 avatars-scene: testing-realm/node_modules
-	cd testing-realm/avatars-scene; \
+	cd testing-realm/avatars-scene && \
 		npm run build
-	cd testing-realm/avatars-scene; \
-		../node_modules/.bin/sdk-commands export-static \
+	cd testing-realm/avatars-scene && \
+		C:/Development/babylonDCL-Fork/testing-realm/node_modules/.bin/sdk-commands export-static \
 			--destination ../../static/ipfs \
 			--timestamp 1683892881318 \
 			--json > ../../src/explorer/avatar-scene.json \
 			--baseUrl=$(CF_PAGES_URL)/ipfs
 
 sdk-watch: testing-realm/node_modules
-	cd testing-realm; npm run start
+	cd testing-realm && npm run start
 
 build: node_modules build-testing-realm
 	@echo "~ Running build..."
 	@node ./build.js --production
 	@echo "~ Typechecking tests..."
-	@node_modules/.bin/tsc --project test/tsconfig.json
+	@C:/Development/babylonDCL-Fork/testing-realm/node_modules/.bin/tsc --project test/tsconfig.json
 	@echo "Build finished"
 
 start: build-testing-realm
